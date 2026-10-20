@@ -1,0 +1,291 @@
+{
+  "info": {
+    "_postman_id": "34f28b04-945d-46a6-9445-20d32a53f777",
+    "name": "User",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "31469818"
+  },
+  "item": [
+    {
+      "name": "02 - User",
+      "item": [
+        {
+          "name": "Create New User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// 1. Cek apakah Status Code = 200 OK\r\npm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\n// 2. Cek apakah Response Time kurang dari 2 detik (2000 ms)\r\npm.test(\"Response time is less than 2000ms\", function () {\r\n    pm.expect(pm.response.responseTime).to.be.below(2000);\r\n});\r\n\r\n// 3. Cek apakah response berupa JSON dan ada field message\r\npm.test(\"Response contains message ID\", function () {\r\n    var jsonData = pm.response.json();\r\n    pm.expect(jsonData.code).to.eql(200);\r\n    pm.expect(jsonData.message).to.be.a('string');\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"id\": 1001,\r\n  \"username\": \"qa_algi_001\",\r\n  \"firstName\": \"Algi\",\r\n  \"lastName\": \"Tester\",\r\n  \"email\": \"qa_algi_001@example.com\",\r\n  \"password\": \"TestPass123!\",\r\n  \"phone\": \"081234567890\",\r\n  \"userStatus\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// 1. Cek Status Code = 200 OK\r\npm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\n// 2. Cek apakah message mengandung teks 'logged in user session'\r\npm.test(\"Response message contains session info\", function () {\r\n    var jsonData = pm.response.json();\r\n    pm.expect(jsonData.message).to.include(\"logged in user session\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\r\n  \"username\": \"qa_algi_001\",\r\n  \"password\": \"TestPass123!\",\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/user/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User by Username",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// 1. Cek Status Code = 200 OK\r\npm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\n// 2. Validasi isi data User\r\npm.test(\"Validate User Profile Data\", function () {\r\n    var jsonData = pm.response.json();\r\n    \r\n    // Memastikan username sesuai dengan yang diminta\r\n    pm.expect(jsonData.username).to.eql(\"qa_algi_001\");\r\n    pm.expect(jsonData.firstName).to.eql(\"Algi\");\r\n    pm.expect(jsonData.email).to.eql(\"algi@test.com\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/user/{{username}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "{{username}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User by Username",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// 1. Cek Status Code = 200 OK\r\npm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\n// 2. Cek response code dari API\r\npm.test(\"Update user response code is 200\", function () {\r\n    var jsonData = pm.response.json();\r\n    pm.expect(jsonData.code).to.eql(200);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"id\": 1001,\r\n  \"username\": \"qa_algi_001\",\r\n  \"firstName\": \"Algi\",\r\n  \"lastName\": \"QA Updated\",\r\n  \"email\": \"algi.updated@test.com\",\r\n  \"password\": \"password123\",\r\n  \"phone\": \"08999999999\",\r\n  \"userStatus\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/user/{{username}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "{{username}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// 1. Cek Status Code = 200 OK\r\npm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\n// 2. Cek apakah pesan respon adalah 'ok'\r\npm.test(\"Logout response message is ok\", function () {\r\n    var jsonData = pm.response.json();\r\n    pm.expect(jsonData.message).to.eql(\"ok\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/user/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// 1. Cek Status Code = 200 OK\r\npm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\n// 2. Cek apakah username yang dihapus dikembalikan di field message\r\npm.test(\"Response message confirms deleted username\", function () {\r\n    var jsonData = pm.response.json();\r\n    pm.expect(jsonData.message).to.eql(\"qa_algi_001\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/user/{{username}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "{{username}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Negative Test",
+      "item": [
+        {
+          "name": "Get Non Existent User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// 1. Harus mengembalikan status code 404 Not Found\r\npm.test(\"Status code is 404 for missing user\", function () {\r\n    pm.response.to.have.status(404);\r\n});\r\n\r\n// 2. Cek pesan error dari server\r\npm.test(\"Response indicates user not found\", function () {\r\n    var jsonData = pm.response.json();\r\n    pm.expect(jsonData.message).to.eql(\"User not found\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/user/hantu_ngawur_999",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "hantu_ngawur_999"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Pet with Invalid Data",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Biasanya API yang baik akan menolak dengan status 400 Bad Request atau 500 tergantung validasi server publik\r\npm.test(\"Status code handles invalid data type\", function () {\r\n    // Petstore Swagger terkadang mengembalikan 500 atau 400 untuk tipe data salah\r\n    pm.expect(pm.response.code).to.be.oneOf([400, 500]);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"id\": \"ini_harusnya_angka_bukan_huruf\",\r\n  \"name\": \"Kucing Error\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/pet",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
